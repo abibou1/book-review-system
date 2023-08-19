@@ -8,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import dev.abibou.bookreview.entity.Book;
 import dev.abibou.bookreview.repository.BookRepository;
+import dev.abibou.bookreview.services.BookService;
 
 @SpringBootApplication
 public class BookReviewApplication {
@@ -15,8 +16,10 @@ public class BookReviewApplication {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
 		
+		BookService bookService = context.getBean("bookService", BookService.class);
 		
-		BookRepository bookRepo = context.getBean("bookRepository", BookRepository.class);
+		
+		//BookRepository bookRepo = context.getBean("bookRepository", BookRepository.class);
 		
 		Book book = new Book();
 		
@@ -24,14 +27,22 @@ public class BookReviewApplication {
 		book.setAuthor("Steven King");
 		book.setTitle("The Outsider");
 		book.setPublisher("Scribner");
+//		
+//		bookRepo.save(book);
+//		
+//		Optional<Book> savedBook = bookRepo.findById(1);
+//		
+//		System.out.println("-------Saved Book--------");
+//		
+//		System.out.println(savedBook.toString());
 		
-		bookRepo.save(book);
 		
-		Optional<Book> savedBook = bookRepo.findById(1);
+		bookService.saveBook(book);
+		Book oneBook = bookService.getBookByID(2);
 		
-		System.out.println("-------Saved Book--------");
+		System.out.println(oneBook);
 		
-		System.out.println(savedBook.toString());
+		
 	}
 
 }
