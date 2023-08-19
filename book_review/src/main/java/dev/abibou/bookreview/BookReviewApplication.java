@@ -14,33 +14,34 @@ import dev.abibou.bookreview.services.BookService;
 public class BookReviewApplication {
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
-		
-		BookService bookService = context.getBean("bookService", BookService.class);
-		
-		
-		//BookRepository bookRepo = context.getBean("bookRepository", BookRepository.class);
-		
-		Book book = new Book();
-		
-		book.setId(1);
-		book.setAuthor("Steven King");
-		book.setTitle("The Outsider");
-		book.setPublisher("Scribner");
+		SpringApplication.run(BookReviewApplication.class, args);
+//		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
 //		
-//		bookRepo.save(book);
+//		BookService bookService = context.getBean("bookService", BookService.class);
 //		
-//		Optional<Book> savedBook = bookRepo.findById(1);
 //		
-//		System.out.println("-------Saved Book--------");
+//		//BookRepository bookRepo = context.getBean("bookRepository", BookRepository.class);
 //		
-//		System.out.println(savedBook.toString());
-		
-		
-		bookService.saveBook(book);
-		Book oneBook = bookService.getBookByID(2);
-		
-		System.out.println(oneBook);
+//		Book book = new Book();
+//		
+//		book.setId(1);
+//		book.setAuthor("Steven King");
+//		book.setTitle("The Outsider");
+//		book.setPublisher("Scribner");
+////		
+////		bookRepo.save(book);
+////		
+////		Optional<Book> savedBook = bookRepo.findById(1);
+////		
+////		System.out.println("-------Saved Book--------");
+////		
+////		System.out.println(savedBook.toString());
+//		
+//		
+//		bookService.saveBook(book);
+//		Book oneBook = bookService.getBookByID(2);
+//		
+//		System.out.println(oneBook);
 		
 		
 	}
