@@ -16,15 +16,12 @@ import lombok.RequiredArgsConstructor;
 public class Book {
 	@Id
 	@Column(name="book_id")
-	private int id;
+	private Integer id;
 	@Column
 	private String author;
 	@Column
 	private String title;
 	@Column
 	private String publisher;
-	
-	
-	
 
 }
