@@ -17,11 +17,8 @@ public class Book {
 	@Id
 	@Column(name="book_id")
 	private Integer id;
-	@Column
 	private String author;
-	@Column
 	private String title;
-	@Column
 	private String publisher;
 
 }
