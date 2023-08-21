@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Entity
-@Table(name="book")// optional as table and entity have the exact name
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Data
