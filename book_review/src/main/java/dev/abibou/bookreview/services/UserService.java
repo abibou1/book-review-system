@@ -21,13 +21,21 @@ public class UserService {
 	@Autowired
 	private BCryptPasswordEncoder pwdEncoder;
 	
-	public void saveUser(UserInfo userInfo) {
+	public boolean saveUser(UserInfo userInfo) {
+		String username = userInfo.getUsername();
+		
+		if(userRepository.findByUsername(username) != null) {
+			
+			return false;
+		}
 		UserEntity userEntity = new UserEntity();
 		
-		userEntity.setUsername(userInfo.getUsername());
+		userEntity.setUsername(username);
 		userEntity.setPassword(pwdEncoder.encode(userInfo.getPassword()));
 		
 		userRepository.save(userEntity);
+		
+		return true;
 	}
 	
 	public UserEntity getUserByUsername(String username) {

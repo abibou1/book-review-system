@@ -22,11 +22,21 @@ public class UserController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody UserInfo userInfo){
+		String response = "";
+		HttpStatus status = null;
 		
-		userService.saveUser(userInfo);
+		boolean isSaved = userService.saveUser(userInfo);
 		
-		String response = "Username=" + userInfo.getUsername() + " has successfully signed up.";
-		return new ResponseEntity<String>(response, HttpStatus.CREATED);
+		if(isSaved) {
+			response = "Username=" + userInfo.getUsername() + " has successfully signed up.";
+			status = HttpStatus.CREATED;
+		}
+		else {
+			response = "Username=" + userInfo.getUsername() + " already exists. Please, log in.";
+			status = HttpStatus.BAD_REQUEST;
+		}
+
+		return new ResponseEntity<String>(response, status);
 	}
 	
 	@PostMapping("/login")
