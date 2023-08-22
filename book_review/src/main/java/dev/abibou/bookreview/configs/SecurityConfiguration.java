@@ -1,4 +1,4 @@
-package dev.abibou.bookreview;
+package dev.abibou.bookreview.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +14,10 @@ public class SecurityConfiguration {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
-		httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("/book/save", "/book/all-books").permitAll());
+		httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("/signup", "/login").permitAll()
+		.anyRequest().authenticated());
 		httpSecurity.csrf(csrf -> csrf.disable());
 		httpSecurity.httpBasic(Customizer.withDefaults());
 		return httpSecurity.build();	
 	}
-	//.anyRequest().authenticated());
 }

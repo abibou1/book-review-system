@@ -7,14 +7,28 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import dev.abibou.bookreview.entity.Book;
+import dev.abibou.bookreview.entity.UserEntity;
 import dev.abibou.bookreview.repository.BookRepository;
 import dev.abibou.bookreview.services.BookService;
+import dev.abibou.bookreview.services.UserService;
 
 @SpringBootApplication
 public class BookReviewApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookReviewApplication.class, args);
+		
+//		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
+//		
+//		UserService userService = context.getBean("userService", UserService.class);
+//		
+//		UserEntity user = new UserEntity();
+//		user.setUsername("ambodji");
+//		user.setPassword("12345");
+//		
+//		userService.saveUser(user);
+		
+		
 //		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
 //		
 //		BookService bookService = context.getBean("bookService", BookService.class);
