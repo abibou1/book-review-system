@@ -40,12 +40,8 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody UserInfo userInfo){
-		System.err.println("Before");
 		
-		String token = jwtUtil.generateToken("ambodji");
-		// String response = "jwt code";
-		
-		System.out.println("Token:\n" + token);
+		String token = jwtUtil.generateToken(userInfo.getUsername());
 		
 		return new ResponseEntity<String>(token, HttpStatus.OK);
 	}
