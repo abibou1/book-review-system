@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.abibou.bookreview.models.UserInfo;
 import dev.abibou.bookreview.services.UserService;
+import dev.abibou.bookreview.utils.JwtUtil;
 
 @RestController
 public class UserController {
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody UserInfo userInfo){
@@ -36,7 +40,13 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody UserInfo userInfo){
+		System.err.println("Before");
 		
-		return new ResponseEntity<String>("JWT code", HttpStatus.OK);
+		String token = jwtUtil.generateToken("ambodji");
+		// String response = "jwt code";
+		
+		System.out.println("Token:\n" + token);
+		
+		return new ResponseEntity<String>(token, HttpStatus.OK);
 	}
 }
