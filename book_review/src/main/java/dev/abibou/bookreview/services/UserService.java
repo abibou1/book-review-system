@@ -3,6 +3,7 @@ package dev.abibou.bookreview.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dev.abibou.bookreview.entity.UserEntity;
 import dev.abibou.bookreview.models.UserInfo;
@@ -38,10 +39,9 @@ public class UserService {
 		return userRepository.findByUsername(username);
 	}
 
-	public void deleteUser(String username) {
-		//userRepository.deleteByUsername(username);
-		System.err.println("deleterUser");
-		return;
+	@Transactional
+	public int deleteUser(String username) {
+		 return userRepository.deleteByUsername(username);
 	}
 
 }

@@ -17,11 +17,13 @@ public class BookReviewApplication {
 
 		UserService userService = context.getBean("userService", UserService.class);
 
-		UserInfo userInfo = new UserInfo();
-		userInfo.setUsername("john");
-		userInfo.setPassword("12345");
-
-		System.out.println(userService.saveUser(userInfo));
+//		UserInfo userInfo = new UserInfo();
+//		userInfo.setUsername("john");
+//		userInfo.setPassword("12345");
+		
+		String username = "john";
+		
+		userService.deleteUser(username);
 
 
 
