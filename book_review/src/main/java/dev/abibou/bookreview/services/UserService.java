@@ -1,6 +1,9 @@
 package dev.abibou.bookreview.services;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,20 +21,32 @@ public class UserService {
 	private BCryptPasswordEncoder pwdEncoder;
 
 	public boolean saveUser(UserInfo userInfo) {
-		// String username = userInfo.getUsername();
-
-//		if(userRepository.findByUsername(username) != null) {
-//
-//			return false;
-//		}
 		UserEntity userEntity = new UserEntity();
 
 		userEntity.setUsername(userInfo.getUsername());
 		userEntity.setPassword(pwdEncoder.encode(userInfo.getPassword()));
 
-		userRepository.save(userEntity);
-
+		try {
+			userRepository.save(userEntity);
+		} catch (DataIntegrityViolationException ex) {
+			throw new DataIntegrityViolationException("Username already exists. Please, log in.");
+		}
 		return true;
+		
+//		String username = userInfo.getUsername();
+//
+//		if(userRepository.findByUsername(username) != null) {
+//
+//			return false;
+//		}
+//		UserEntity userEntity = new UserEntity();
+//
+//		userEntity.setUsername(userInfo.getUsername());
+//		userEntity.setPassword(pwdEncoder.encode(userInfo.getPassword()));
+//
+//		userRepository.save(userEntity);
+//
+//		return true;
 	}
 
 	public UserEntity getUserByUsername(String username) {

@@ -17,13 +17,15 @@ public class BookReviewApplication {
 
 		UserService userService = context.getBean("userService", UserService.class);
 
-//		UserInfo userInfo = new UserInfo();
-//		userInfo.setUsername("john");
-//		userInfo.setPassword("12345");
+		UserInfo userInfo = new UserInfo();
+//		userInfo.setUsername("ambodji");
+		userInfo.setPassword("12345");
 		
-		String username = "john";
+		System.out.println(userService.saveUser(userInfo)); //SQLIntegrityConstraintViolationException
 		
-		System.out.println("deleted: "+userService.deleteUser(username));
+//		String username = "john";
+//		
+//		System.out.println("deleted: "+userService.deleteUser(username));
 
 
 

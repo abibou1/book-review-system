@@ -1,6 +1,8 @@
 package dev.abibou.bookreview;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import dev.abibou.bookreview.entity.UserEntity;
 import dev.abibou.bookreview.models.UserInfo;
@@ -29,13 +32,55 @@ public class UserServiceTests {
 	}
 
 	@Test
-	public void saveUser_shouldSaveUser_whenEntityIsValid() {
+	public void saveUser_shouldSaveUser_whenNewUserIsValid() throws Exception {
 
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUsername("rong");
 		userInfo.setPassword("12345");
 
 		assertTrue(userService.saveUser(userInfo));
+	}
+	
+	@Test 
+	void saveUser_shouldThrowException_whenUsernameExists() {
+		
+		UserInfo userInfo = new UserInfo("ambodji", "12345");
+		
+		Exception exception = assertThrows(DataIntegrityViolationException.class, () -> {
+			userService.saveUser(userInfo);
+		});
+		
+		String expectedMessage = "Username already exists. Please, log in.";
+		String actualMessage = exception.getMessage();
+		
+		assertEquals(actualMessage, expectedMessage);
+	}
+	
+	@Test
+	void saveUser_shouldThrowException_whenUserIsNull() {
+		UserInfo userInfo=null;
+		
+		Exception exception = assertThrows(NullPointerException.class, () -> {
+			userService.saveUser(userInfo);
+		});
+
+		String actualMessage = exception.getMessage();
+		
+		assertTrue(actualMessage.contains("is null"));
+		
+	}// IllegalArgumentException: rawPassword cannot be null
+	
+	@Test
+	void saveUser_shouldThrowException_whenUserFieldsAreNull() {
+		UserInfo userInfo=new UserInfo();
+		
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			userService.saveUser(userInfo);
+		});
+
+		String actualMessage = exception.getMessage();
+		
+		assertTrue(actualMessage.contains("cannot be null"));
 	}
 
 }
