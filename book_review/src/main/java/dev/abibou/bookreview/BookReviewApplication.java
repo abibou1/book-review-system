@@ -23,7 +23,7 @@ public class BookReviewApplication {
 		
 		String username = "john";
 		
-		userService.deleteUser(username);
+		System.out.println("deleted: "+userService.deleteUser(username));
 
 
 
