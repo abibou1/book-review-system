@@ -12,30 +12,36 @@ import dev.abibou.bookreview.repository.UserRepository;
 public class UserService {
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder pwdEncoder;
-	
+
 	public boolean saveUser(UserInfo userInfo) {
-		String username = userInfo.getUsername();
-		
-		if(userRepository.findByUsername(username) != null) {
-			
-			return false;
-		}
+		// String username = userInfo.getUsername();
+
+//		if(userRepository.findByUsername(username) != null) {
+//
+//			return false;
+//		}
 		UserEntity userEntity = new UserEntity();
-		
-		userEntity.setUsername(username);
+
+		userEntity.setUsername(userInfo.getUsername());
 		userEntity.setPassword(pwdEncoder.encode(userInfo.getPassword()));
-		
+
 		userRepository.save(userEntity);
-		
+
 		return true;
 	}
-	
+
 	public UserEntity getUserByUsername(String username) {
-		
+
 		return userRepository.findByUsername(username);
+	}
+
+	public void deleteUser(String username) {
+		//userRepository.deleteByUsername(username);
+		System.err.println("deleterUser");
+		return;
 	}
 
 }

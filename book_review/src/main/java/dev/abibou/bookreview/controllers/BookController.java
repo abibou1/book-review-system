@@ -19,21 +19,21 @@ import dev.abibou.bookreview.services.BookService;
 public class BookController {
 	@Autowired
 	BookService bookService;
-	
+
 	@PostMapping("/save")
 	public ResponseEntity<String> saveBook(@RequestBody Book book) {
-		
+
 		bookService.saveBook(book);
-		
+
 		String response = "book with id="+book.getId()+ " is saved.";
-		return new ResponseEntity<String>(response, HttpStatus.CREATED);
-		
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+
 	}
-	
+
 	@GetMapping("/all-books")
 	public ResponseEntity<List<Book>> getAllBooks(){
 		List<Book> books = bookService.getAllBooks();
-		
-		return new ResponseEntity<List<Book>>(books, HttpStatus.OK);
+
+		return new ResponseEntity<>(books, HttpStatus.OK);
 	}
 }

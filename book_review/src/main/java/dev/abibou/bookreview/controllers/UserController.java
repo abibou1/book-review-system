@@ -15,17 +15,17 @@ import dev.abibou.bookreview.utils.JwtUtil;
 public class UserController {
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	private JwtUtil jwtUtil;
-	
+
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody UserInfo userInfo){
 		String response;
 		HttpStatus status;
-		
+
 		boolean isSaved = userService.saveUser(userInfo);
-		
+
 		if(isSaved) {
 			response = "Username=" + userInfo.getUsername() + " has successfully signed up.";
 			status = HttpStatus.CREATED;
@@ -35,14 +35,14 @@ public class UserController {
 			status = HttpStatus.BAD_REQUEST;
 		}
 
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
-	
+
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody UserInfo userInfo){
-		
+
 		String token = jwtUtil.generateToken(userInfo.getUsername());
-		
-		return new ResponseEntity<String>(token, HttpStatus.OK);
+
+		return new ResponseEntity<>(token, HttpStatus.OK);
 	}
 }

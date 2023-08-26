@@ -20,6 +20,6 @@ public class SecurityConfiguration {
 			);
 		httpSecurity.csrf(csrf -> csrf.disable());
 		httpSecurity.httpBasic(Customizer.withDefaults());
-		return httpSecurity.build();	
+		return httpSecurity.build();
 	}
 }

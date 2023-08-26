@@ -13,17 +13,17 @@ import dev.abibou.bookreview.repository.BookRepository;
 public class BookService {
 	@Autowired
 	BookRepository bookRepository;
-	
+
 	public void saveBook(Book book) {
 		bookRepository.save(book);
 	}
-	
+
 	public Book getBookByID(int id) {
-		
+
 		Optional<Book> book = bookRepository.findById(id);
 		return book.isPresent()?book.get():new Book();
 	}
-	
+
 	public List<Book> getAllBooks(){
 		return bookRepository.findAll();
 	}

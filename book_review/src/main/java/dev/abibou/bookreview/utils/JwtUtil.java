@@ -14,16 +14,17 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtUtil {
 	@Value("${jwt.secret}")
 	private String SECRET_KEY;
-	
+
 	public String generateToken(String username) {
 		Map<String, Object> claims = new HashMap<>();
-		
+		claims.put("username", "thisisusername");
+
 		return createToken(claims, username);
 	}
-	
+
 	public String createToken(Map<String, Object> claims, String subject) {
 		long currentTime = System.currentTimeMillis();
-		
+
 		return Jwts.builder().setHeaderParam("type", "JWT")
 				.setIssuer("Me Inc.")
 				.setSubject(subject)
@@ -32,7 +33,7 @@ public class JwtUtil {
 				.addClaims(claims)
 				.signWith(SignatureAlgorithm.HS256, SECRET_KEY)
 				.compact();
-		
+
 	}
 
 }
