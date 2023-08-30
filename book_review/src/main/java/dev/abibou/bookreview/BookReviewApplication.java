@@ -11,17 +11,17 @@ import dev.abibou.bookreview.services.UserService;
 public class BookReviewApplication {
 
 	public static void main(String[] args) {
-		//SpringApplication.run(BookReviewApplication.class, args);
+		SpringApplication.run(BookReviewApplication.class, args);
 
-		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
-
-		UserService userService = context.getBean("userService", UserService.class);
-
-		UserInfo userInfo = new UserInfo();
-//		userInfo.setUsername("ambodji");
-		userInfo.setPassword("12345");
-		
-		System.out.println(userService.saveUser(userInfo)); //SQLIntegrityConstraintViolationException
+//		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
+//
+//		UserService userService = context.getBean("userService", UserService.class);
+//
+//		UserInfo userInfo = new UserInfo();
+//		userInfo.setUsername("harry");
+//		userInfo.setPassword("12345");
+//		
+//		System.out.println(userService.saveUser(userInfo));
 		
 //		String username = "john";
 //		
@@ -29,11 +29,11 @@ public class BookReviewApplication {
 
 
 
-//		System.out.println(userService.getUserByUsername("rong"));
+		// System.out.println(userService.deleteUser("rong"));
 //
 //		userService.deleteUser("rong");
 
-		//System.out.println(userService.getUserByUsername("rong"));
+		// System.out.println(userService.getUserByUsername("hermi"));
 
 
 //		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);

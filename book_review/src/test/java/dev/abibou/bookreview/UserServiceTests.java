@@ -2,9 +2,12 @@ package dev.abibou.bookreview;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -24,12 +27,12 @@ public class UserServiceTests {
 	@Autowired
 	private UserService userService;
 	
-	@BeforeAll
-	public void delele_rong_username() {
-		String username = "rong";
-		
-		userService.deleteUser(username);
-	}
+//	@BeforeAll
+//	public void delele_rong_username() {
+//		String username = "rong";
+//		
+//		userService.deleteUser(username);
+//	}
 
 	@Test
 	public void saveUser_shouldSaveUser_whenNewUserIsValid() throws Exception {
@@ -82,5 +85,37 @@ public class UserServiceTests {
 		
 		assertTrue(actualMessage.contains("cannot be null"));
 	}
+	
+	@Test
+	void getUserByUsername_shouldReturnUser_whenUserExists() {
+		String username = "ambodji";
+		
+		UserEntity user = userService.getUserByUsername(username);
+		
+		assertNotNull(user);
+	}
+	
+	@Test
+	void getUserByUsername_shouldReturnNull_whenUserDoesNotExist() {
+		String username = "NonExistentUser";
+		
+		UserEntity user = userService.getUserByUsername(username);
+		
+		assertNull(user);
+	}
+	
+	@Test
+	void deleteUser_shouldDeleteZeroUser_whenWhenUsernameDoesNotExist() {
+		int expectedNumber=0;
+		int actualNumber = userService.deleteUser("notusername");
+		
+		assertEquals(expectedNumber, actualNumber);
+	}
+	
+	@AfterAll
+	public void deleteUser_shouldDeleteOneUser_whenUserExist() {
+		userService.deleteUser("rong");
+	}
+
 
 }

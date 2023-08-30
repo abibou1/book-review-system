@@ -31,22 +31,8 @@ public class UserService {
 		} catch (DataIntegrityViolationException ex) {
 			throw new DataIntegrityViolationException("Username already exists. Please, log in.");
 		}
-		return true;
 		
-//		String username = userInfo.getUsername();
-//
-//		if(userRepository.findByUsername(username) != null) {
-//
-//			return false;
-//		}
-//		UserEntity userEntity = new UserEntity();
-//
-//		userEntity.setUsername(userInfo.getUsername());
-//		userEntity.setPassword(pwdEncoder.encode(userInfo.getPassword()));
-//
-//		userRepository.save(userEntity);
-//
-//		return true;
+		return true;
 	}
 
 	public UserEntity getUserByUsername(String username) {

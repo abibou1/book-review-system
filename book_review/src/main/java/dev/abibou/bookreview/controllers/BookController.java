@@ -20,7 +20,7 @@ public class BookController {
 	@Autowired
 	BookService bookService;
 
-	@PostMapping("/save")
+	@PostMapping("admin/book/save")
 	public ResponseEntity<String> saveBook(@RequestBody Book book) {
 
 		bookService.saveBook(book);
@@ -30,7 +30,7 @@ public class BookController {
 
 	}
 
-	@GetMapping("/all-books")
+	@GetMapping("authenticated/book/all-books")
 	public ResponseEntity<List<Book>> getAllBooks(){
 		List<Book> books = bookService.getAllBooks();
 

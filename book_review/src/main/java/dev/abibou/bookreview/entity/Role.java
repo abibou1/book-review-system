@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="roles", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Table(name="roles")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +20,6 @@ public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int role_id;
-	@Column(unique = true)
 	private String name;
 
 	public Role(String name) {

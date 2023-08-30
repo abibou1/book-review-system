@@ -1,6 +1,7 @@
 package dev.abibou.bookreview.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,21 +22,28 @@ public class UserController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody UserInfo userInfo){
-		String response;
-		HttpStatus status;
-
-		boolean isSaved = userService.saveUser(userInfo);
-
-		if(isSaved) {
-			response = "Username=" + userInfo.getUsername() + " has successfully signed up.";
-			status = HttpStatus.CREATED;
+		
+		try {
+			userService.saveUser(userInfo);
+		} catch (DataIntegrityViolationException ex) {
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
 		}
-		else {
-			response = "Username=" + userInfo.getUsername() + " already exists. Please, log in.";
-			status = HttpStatus.BAD_REQUEST;
-		}
+		
+		String token = jwtUtil.generateToken(userInfo.getUsername());
+		return new ResponseEntity<>(token, HttpStatus.CREATED);
 
-		return new ResponseEntity<>(response, status);
+//		boolean isSaved = userService.saveUser(userInfo);
+//
+//		if(isSaved) {
+//			response = "Username=" + userInfo.getUsername() + " has successfully signed up.";
+//			status = HttpStatus.CREATED;
+//		}
+//		else {
+//			response = "Username=" + userInfo.getUsername() + " already exists. Please, log in.";
+//			status = HttpStatus.BAD_REQUEST;
+//		}
+//
+//		return new ResponseEntity<>(response, status);
 	}
 
 	@PostMapping("/login")

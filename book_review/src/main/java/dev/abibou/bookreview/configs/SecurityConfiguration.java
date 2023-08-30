@@ -11,8 +11,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+
+	@SuppressWarnings({ "deprecation", "removal" })
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
+
 		httpSecurity
 			.authorizeHttpRequests((request) -> request
 				.requestMatchers("/signup", "/login").permitAll()
@@ -20,6 +23,7 @@ public class SecurityConfiguration {
 			);
 		httpSecurity.csrf(csrf -> csrf.disable());
 		httpSecurity.httpBasic(Customizer.withDefaults());
+		
 		return httpSecurity.build();
 	}
 }
