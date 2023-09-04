@@ -1,29 +1,78 @@
 package dev.abibou.bookreview.configs;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+// import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import dev.abibou.bookreview.security.AuthEntryPointJwt;
+import dev.abibou.bookreview.security.AuthTokenFilter;
+import dev.abibou.bookreview.services.UserDetailsServiceImpl;
 
 @Configuration
-@EnableWebSecurity
+// @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
-
-	@SuppressWarnings({ "deprecation", "removal" })
+	@Autowired
+	UserDetailsServiceImpl userDetailsService;
+	
+	@Autowired
+	private AuthEntryPointJwt unauthorizedHandler;
+	
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
-
-		httpSecurity
-			.authorizeHttpRequests((request) -> request
-				.requestMatchers("/signup", "/login").permitAll()
+	public AuthTokenFilter authenticationJwtTokenFilter() {
+		return new AuthTokenFilter();
+	}
+	
+	@Bean
+	public DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(passwordEncoder());
+		
+		return authProvider;
+	}
+	
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
+		return authConfig.getAuthenticationManager();
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity.csrf(csrf -> csrf.disable())
+			.exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.authorizeHttpRequests(request ->
+			request.requestMatchers("/api/auth/**").permitAll()
+				.requestMatchers("/api/test/**").permitAll()
 				.anyRequest().authenticated()
-			);
-		httpSecurity.csrf(csrf -> csrf.disable());
-		httpSecurity.httpBasic(Customizer.withDefaults());
+		);
+		
+		httpSecurity.authenticationProvider(authenticationProvider());
+		
+		httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 		
 		return httpSecurity.build();
+
 	}
 }

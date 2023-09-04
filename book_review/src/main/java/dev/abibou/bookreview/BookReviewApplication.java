@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import dev.abibou.bookreview.models.UserInfo;
-import dev.abibou.bookreview.services.UserService;
 
 @SpringBootApplication
 public class BookReviewApplication {

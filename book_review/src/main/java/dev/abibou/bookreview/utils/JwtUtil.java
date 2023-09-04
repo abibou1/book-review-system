@@ -1,39 +1,62 @@
 package dev.abibou.bookreview.utils;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import dev.abibou.bookreview.services.UserDetailsImpl;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
-@Service
+@Component
 public class JwtUtil {
 	@Value("${jwt.secret}")
 	private String SECRET_KEY;
-
-	public String generateToken(String username) {
-		Map<String, Object> claims = new HashMap<>();
-		claims.put("username", "thisisusername");
-
-		return createToken(claims, username);
-	}
-
-	public String createToken(Map<String, Object> claims, String subject) {
-		long currentTime = System.currentTimeMillis();
-
-		return Jwts.builder().setHeaderParam("type", "JWT")
-				.setIssuer("Me Inc.")
-				.setSubject(subject)
-				.setIssuedAt(new Date(currentTime))
-				.setExpiration(new Date(currentTime+ 1000 * 60 * 30))
-				.addClaims(claims)
-				.signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+	
+	@Value("${jwt.expiration}")
+	private int JWT_EXPIRATION;
+	
+	public String generateJwtToken(Authentication authentication) {
+		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+		
+		return Jwts.builder()
+				.setSubject((userPrincipal.getUsername()))
+				.setIssuedAt(new Date())
+				.setExpiration(new Date((new Date()).getTime() + JWT_EXPIRATION))
+				.signWith(key(), SignatureAlgorithm.HS256)
 				.compact();
+	}
+	
+	private Key key() {
+		return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
+	}
+	
+	public String getUserNameFromJwtToken(String token) {
+		return Jwts.parserBuilder().setSigningKey(key()).build()
+				.parseClaimsJws(token).getBody().getSubject();
+	}
+	
+	public boolean validateJwtToken(String authToken) {
+	    try {
+	      Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
+	      return true;
+	    } catch (MalformedJwtException e) {
+	      System.err.println("Invalid JWT token: " + e.getMessage());
+	    } catch (ExpiredJwtException e) {
+	      System.err.println("JWT token is expired: " + e.getMessage());
+	    } catch (UnsupportedJwtException e) {
+	      System.err.println("JWT token is unsupported: " + e.getMessage());
+	    } catch (IllegalArgumentException e) {
+	      System.err.println("JWT claims string is empty: " + e.getMessage());
+	    }
 
+	    return false;
 	}
 
 }
