@@ -63,9 +63,17 @@ public class UserController {
 		
 		UserEntity userEntity = new UserEntity(username, encoder.encode(password));
 		
+		Role role;
+		
+		if(userInfo.getRole().toUpperCase() == "USER" ) {
+			role = new Role("USER");
+		}
+		else {
+			role = new Role("ADMIN");
+		}
+		
 		
 		Set<Role> roles = new HashSet<>();
-		Role role = new Role("USER");
 		roles.add(role);
 		
 		userEntity.setRoles(roles);

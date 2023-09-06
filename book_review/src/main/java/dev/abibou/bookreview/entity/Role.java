@@ -25,5 +25,12 @@ public class Role {
 	public Role(String name) {
 		this.name=name;
 	}
+	
+//	@Getter
+//	private final Set<Permissions> permissions;
+//	
+//	public List<SimpleGrantedAuthority> getAuthorities(){
+//		var authorities = getPermissions().
+//	}
 
 }

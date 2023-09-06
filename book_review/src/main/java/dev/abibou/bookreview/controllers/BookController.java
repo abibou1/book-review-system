@@ -15,12 +15,11 @@ import dev.abibou.bookreview.entity.Book;
 import dev.abibou.bookreview.services.BookService;
 
 @RestController
-@RequestMapping("/book")
 public class BookController {
 	@Autowired
 	BookService bookService;
 
-	@PostMapping("admin/book/save")
+	@PostMapping("/admin/book/save")
 	public ResponseEntity<String> saveBook(@RequestBody Book book) {
 
 		bookService.saveBook(book);
@@ -30,7 +29,7 @@ public class BookController {
 
 	}
 
-	@GetMapping("authenticated/book/all-books")
+	@GetMapping("/authenticated/book/all-books")
 	public ResponseEntity<List<Book>> getAllBooks(){
 		List<Book> books = bookService.getAllBooks();
 
