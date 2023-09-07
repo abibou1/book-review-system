@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -29,7 +30,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public ResponseEntity<Map<String, List<String>>> handleNotFoundException(UsernameNotFoundException ex) {
-	    List<String> errors = Collections.singletonList(ex.getMessage());
+	    List<String> errors = Collections.singletonList("UsernameNotFoundException: " + ex.getMessage());
 	    return new ResponseEntity<>(getErrorsMap(errors), HttpStatus.NOT_FOUND);
 	}
 
@@ -43,6 +44,15 @@ public class GlobalExceptionHandler {
 	public final ResponseEntity<Map<String, List<String>>> handleRuntimeExceptions(RuntimeException ex) {
 	    List<String> errors = Collections.singletonList(ex.getMessage());
 	    return new ResponseEntity<>(getErrorsMap(errors), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public final ResponseEntity<Map<String, List<String>>> handleDataIntegrityViolationException(
+			DataIntegrityViolationException ex ) {
+		
+		List<String> errors = Collections.singletonList("DataIntegrityViolationException: " + ex.getMessage());
+	    return new ResponseEntity<>(getErrorsMap(errors), HttpStatus.CONFLICT);
+		
 	}
 
     private Map<String, List<String>> getErrorsMap(List<String> errors) {

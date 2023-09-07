@@ -30,6 +30,7 @@ import org.springframework.validation.FieldError;
 import dev.abibou.bookreview.entity.Role;
 import dev.abibou.bookreview.entity.UserEntity;
 import dev.abibou.bookreview.payload.request.UserRequest;
+import dev.abibou.bookreview.payload.response.JwtResponse;
 import dev.abibou.bookreview.repository.RoleRepository;
 import dev.abibou.bookreview.repository.UserRepository;
 import dev.abibou.bookreview.services.UserDetailsImpl;
@@ -61,11 +62,11 @@ public class UserController {
 		
 		String username = userInfo.getUsername();
 		String password = userInfo.getPassword();
-
-		if(userRepo.existsByUsername(username)) {
-			
-			return new ResponseEntity<>("Error: Username is already taken!", HttpStatus.BAD_REQUEST);
-		}
+//
+//		if(userRepo.existsByUsername(username)) {
+//			
+//			return new ResponseEntity<>("Error: Username is already taken!", HttpStatus.BAD_REQUEST);
+//		}
 		
 		UserEntity userEntity = new UserEntity(username, encoder.encode(password));
 		
@@ -112,7 +113,7 @@ public class UserController {
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
 		
-		return new ResponseEntity<>(jwt, HttpStatus.OK);
+		return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
 		
 	}
 	
