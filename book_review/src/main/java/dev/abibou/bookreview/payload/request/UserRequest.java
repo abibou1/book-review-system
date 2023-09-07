@@ -25,4 +25,9 @@ public class UserRequest {
 	@NotBlank(message = "Role is mandatory")
 	@NotNull(message = "Invalid role name: role is NULL")
 	private String role;
+	
+	public UserRequest(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
 }

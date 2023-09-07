@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.abibou.bookreview.payload.request.UserRequest;
+import dev.abibou.bookreview.payload.response.JwtResponse;
 import dev.abibou.bookreview.services.UserDetailsServiceImpl;
 
 @SpringBootTest
@@ -101,6 +102,41 @@ UserRequest user = new UserRequest("amb", "1234567", "ADMIN");
 		
 	}
 	
+	@Test
+	public void login_shouldReturnToken_whenUserIsRegistered() throws Exception {
+		UserRequest user = new UserRequest("ambodji", "1234");
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(loginURL)
+				.content(asJsonString(user))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		int status = mvcResult.getResponse().getStatus();
+		
+		String response = mvcResult.getResponse().getContentAsString();
+		
+		assertEquals(status, HttpStatus.OK.value());
+		assertTrue(response.contains("token"));
+		
+	}
+	
+	@Test
+	public void login_shouldBadCredentials_whenUsernameOrPasswordIncorrect() throws Exception {
+		UserRequest user = new UserRequest("ambodji", "forgotPassword23");
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(loginURL)
+				.content(asJsonString(user))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		int status = mvcResult.getResponse().getStatus();
+		
+		String response = mvcResult.getResponse().getContentAsString();
+		
+		assertEquals(status, HttpStatus.INTERNAL_SERVER_ERROR.value());
+		assertTrue(response.contains("errors") && response.contains("Bad credentials"));
+		
+	}
 	
 	
 	public static String asJsonString(final Object obj) {
