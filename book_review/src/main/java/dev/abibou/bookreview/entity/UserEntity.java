@@ -16,6 +16,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+// import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,8 +34,12 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long user_id;
+	
+	@Size(min=4, max=20, message="Username must be between 4 and 20 characters.")
 	@Column(unique = true)
 	private String username;
+	
+	@Min(value=7, message="password must be minimum  characters")
 	@Column
 	private String password;
 	

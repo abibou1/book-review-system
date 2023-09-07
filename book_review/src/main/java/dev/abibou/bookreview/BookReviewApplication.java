@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import dev.abibou.bookreview.models.UserInfo;
+import dev.abibou.bookreview.payload.request.UserRequest;
 
 @SpringBootApplication
 public class BookReviewApplication {

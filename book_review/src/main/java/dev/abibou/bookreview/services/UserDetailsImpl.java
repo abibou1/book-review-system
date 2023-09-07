@@ -76,20 +76,5 @@ public class UserDetailsImpl implements UserDetails {
 		return true;
 	}
 	
-//	@Override
-//	public boolean equals(Object obj) {
-//		if(this == obj) {
-//			return true;
-//		}
-//		
-//		if(obj == null || getClass() != obj.getClass()) {
-//			return false;
-//		}
-//		
-//		UserDetailsImpl user = (UserDetailsImpl) obj;
-//		
-//		return Objects.equals(id, user.id);
-//	}
-	
 
 }

@@ -30,6 +30,9 @@ public class SecurityConfiguration {
 	UserDetailsServiceImpl userDetailsService;
 	
 	@Autowired
+	private PasswordEncoder pwdEncoder;
+	
+	@Autowired
 	private AuthEntryPointJwt unauthorizedHandler;
 	
 	@Bean
@@ -42,7 +45,7 @@ public class SecurityConfiguration {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		
 		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(passwordEncoder());
+		authProvider.setPasswordEncoder(pwdEncoder);
 		
 		return authProvider;
 	}
@@ -50,11 +53,6 @@ public class SecurityConfiguration {
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
 		return authConfig.getAuthenticationManager();
-	}
-	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
 	}
 	
 	@Bean
