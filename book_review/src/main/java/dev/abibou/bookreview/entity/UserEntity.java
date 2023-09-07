@@ -35,11 +35,9 @@ public class UserEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long user_id;
 	
-	@Size(min=4, max=20, message="Username must be between 4 and 20 characters.")
 	@Column(unique = true)
 	private String username;
 	
-	@Min(value=7, message="password must be minimum  characters")
 	@Column
 	private String password;
 	
@@ -48,11 +46,6 @@ public class UserEntity {
 		joinColumns = @JoinColumn(name = "user_id"),
 		inverseJoinColumns = @JoinColumn( name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
-	
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "role_id", referencedColumnName = "role_id")
-//	@Setter(AccessLevel.NONE)
-//	private Role role = new Role("USER");
 	
 	public UserEntity(String username, String password) {
 		this.username=username;

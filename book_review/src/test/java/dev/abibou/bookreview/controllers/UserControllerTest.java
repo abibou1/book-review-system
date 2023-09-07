@@ -32,21 +32,15 @@ public class UserControllerTest {
 	
 	/*
 	 * 
-	 * testing signup:
+	 * testing signup:dkd
 	 * empty username
+	 * short pwd =>
 	 * existing user
 	 * 
 	 */
 	
 	@Test
 	public void signup_shouldRegisterAdmin_whenDataIsValid() throws Exception {
-		
-//		this.mockMvc.perform(MockMvcRequestBuilders
-//				.post(signupURL)
-//				.content(asJsonString(new UserInfo("jonhD", "1234", "ADMIN")))
-//				.contentType(MediaType.APPLICATION_JSON_VALUE))
-//	//		.andDo(print())
-//			.andExpect(status().isCreated());
 		
 		UserRequest user = new UserRequest("jonhD", "1234", "ADMIN");
 		

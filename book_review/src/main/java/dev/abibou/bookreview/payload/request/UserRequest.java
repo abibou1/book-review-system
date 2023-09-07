@@ -2,6 +2,7 @@ package dev.abibou.bookreview.payload.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,10 +12,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequest {
-	@Size(min=4, max=20, message="Username must be between 4 and 20 characters")
+	@NotBlank(message = "Invalid Username: Empty username")
+	@NotNull(message = "Invalid UserName: username is NULL")
+	@Size(min=4, max=20, message="Invalid Username: username must be between 4 and 20 characters")
 	private String username;
-	@Min(value=7, message="password must be minimum 7 characters")
+	
+	@NotBlank(message = "Invalid Password: Empty password")
+	@NotNull(message = "Invalid Password: password is NULL")
+	@Min(value=7, message="Invalid Password: password must be at least 7 characters")
 	private String password;
+	
 	@NotBlank(message = "Role is mandatory")
+	@NotNull(message = "Invalid role name: role is NULL")
 	private String role;
 }
