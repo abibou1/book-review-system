@@ -23,6 +23,11 @@ public class BookService {
 		Optional<Book> book = bookRepository.findById(id);
 		return book.isPresent()?book.get():new Book();
 	}
+	
+	public void deleteBookByID(int id) {
+		
+		bookRepository.deleteById(id);
+	}
 
 	public List<Book> getAllBooks(){
 		return bookRepository.findAll();

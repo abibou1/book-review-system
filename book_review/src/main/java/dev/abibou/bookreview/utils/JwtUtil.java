@@ -42,21 +42,26 @@ public class JwtUtil {
 				.parseClaimsJws(token).getBody().getSubject();
 	}
 	
-	public boolean validateJwtToken(String authToken) {
+	public boolean validateJwtToken(String authToken) throws Exception {
 	    try {
 	      Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
 	      return true;
 	    } catch (MalformedJwtException e) {
-	      System.err.println("Invalid JWT token: " + e.getMessage());
+	    	throw new MalformedJwtException("Invalid JWT token: " + e.getMessage());
+	      //System.err.println("Invalid JWT token: " + e.getMessage());
 	    } catch (ExpiredJwtException e) {
-	      System.err.println("JWT token is expired: " + e.getMessage());
+	    	throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "JWT token is expired: " + e.getMessage());
+	      //System.err.println("JWT token is expired: " + e.getMessage());
 	    } catch (UnsupportedJwtException e) {
-	      System.err.println("JWT token is unsupported: " + e.getMessage());
+	    	throw new UnsupportedJwtException("JWT token is unsupported: " + e.getMessage());
+	     // System.err.println("JWT token is unsupported: " + e.getMessage());
 	    } catch (IllegalArgumentException e) {
-	      System.err.println("JWT claims string is empty: " + e.getMessage());
+	    	throw new IllegalArgumentException("JWT claims string is empty: " + e.getMessage());
+	     // System.err.println("JWT claims string is empty: " + e.getMessage());
+	    } catch (Exception e) {
+	    	throw new Exception("Failed to validate token: " + e.getMessage());
 	    }
 
-	    return false;
 	}
 
 }

@@ -29,19 +29,32 @@ public class UserServiceTest {
 	@Autowired
 	private UserDetailsServiceImpl userService;
 	
+	private final UserRequest userADMIN = new UserRequest("ambodji", "1234567", "ADMIN");
+	private final UserRequest simpleUser = new UserRequest("simpleuser", "1234567", "USER");
+	
+	
 	@BeforeAll
 	public void delele_rong_username() {
-		String username = "rong";
+		String username = "johnD";
+		UserRequest userToDelete = new UserRequest("usertodelete", "password1", "USER");
 		
 		userService.deleteUser(username);
+		
+		try {
+			userService.saveUser(userToDelete);
+			userService.saveUser(simpleUser);
+			userService.saveUser(userADMIN);
+		} catch(DataIntegrityViolationException ex) {
+			System.err.println("Users were already in the DB.");
+		}
 	}
 
 	@Test
 	public void saveUser_shouldSaveUser_whenNewUserIsValid() throws Exception {
 
 		UserRequest userInfo = new UserRequest();
-		userInfo.setUsername("rong");
-		userInfo.setPassword("12345");
+		userInfo.setUsername("johnD");
+		userInfo.setPassword("1234567");
 		userInfo.setRole("admin");
 
 		assertTrue(userService.saveUser(userInfo));
@@ -50,7 +63,7 @@ public class UserServiceTest {
 	@Test 
 	void saveUser_shouldThrowException_whenUsernameExists() {
 		
-		UserRequest userInfo = new UserRequest("ambodji", "12345", "admin");
+		UserRequest userInfo = new UserRequest("ambodji", "1234567", "ADMIN");
 		
 		Exception exception = assertThrows(DataIntegrityViolationException.class, () -> {
 			userService.saveUser(userInfo);
@@ -74,7 +87,7 @@ public class UserServiceTest {
 		
 		assertTrue(actualMessage.contains("is null"));
 		
-	}// IllegalArgumentException: rawPassword cannot be null
+	}
 	
 	@Test
 	void saveUser_shouldThrowException_whenUserFieldsAreNull() {
@@ -124,7 +137,10 @@ public class UserServiceTest {
 	
 	@Test
 	public void deleteUser_shouldDeleteOneUser_whenUserExist() {
-		userService.deleteUser("rong");
+		int actualCount = userService.deleteUser("usertodelete");
+		int expectedCount = 1;
+		
+		assertEquals(expectedCount, actualCount);
 	}
 
 

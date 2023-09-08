@@ -15,8 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class Book {
 	@NotBlank(message = "ID is mandatory")
 	@Id
-	@Column(name="book_id")
-	private Integer id;
+	private Integer book_id;
 	@NotBlank(message = "Author name is mandatory")
 	private String author;
 	@NotBlank(message = "Title of the book is mandatory")
