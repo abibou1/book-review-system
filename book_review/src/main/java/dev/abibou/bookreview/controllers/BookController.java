@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.abibou.bookreview.entity.Book;
 import dev.abibou.bookreview.services.BookService;
+import jakarta.validation.Valid;
 
 @RestController
 public class BookController {
@@ -26,7 +27,7 @@ public class BookController {
 	
 
 	@PostMapping("/admin/book/save")
-	public ResponseEntity<String> saveBook(@RequestBody Book book) {
+	public ResponseEntity<String> saveBook(@Valid @RequestBody Book book) {
 
 		bookService.saveBook(book);
 
