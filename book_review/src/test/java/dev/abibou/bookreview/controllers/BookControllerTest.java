@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import dev.abibou.bookreview.entity.Book;
 import dev.abibou.bookreview.helpers.Converter;
+import dev.abibou.bookreview.payload.request.UserRequest;
 import dev.abibou.bookreview.payload.response.JwtResponse;
 import dev.abibou.bookreview.services.BookService;
 import dev.abibou.bookreview.configs.Constants;
@@ -34,21 +35,21 @@ public class BookControllerTest {
 	private String jwtAdmin;
 	private String jwtSimpleUser;
 	
-	
-	
 	@BeforeAll
 	public void setUp() throws Exception {
 		bookService.deleteBookByID(20);
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.LOGIN_URL)
-				.content(Converter.convertToString(Constants.ADMIN_USER))
-				.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
+//		MvcResult mvcResultAdmin = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.LOGIN_URL)
+//				.content(Converter.convertToString(Constants.ADMIN_USER))
+//				.contentType(MediaType.APPLICATION_JSON_VALUE))
+//				.andReturn();
+//		
+//		String bodyStringAdmin = mvcResultAdmin.getResponse().getContentAsString();
+//		jwtAdmin = getTokenFromResponseAsString(bodyString);
 		
-		String bodyString = mvcResult.getResponse().getContentAsString();
-		jwtAdmin = getTokenFromResponseAsString(bodyString);
-		
-		System.err.println(jwtAdmin);
+		jwtAdmin = mockLogin(Constants.ADMIN_USER);
+		jwtSimpleUser = mockLogin(Constants.SIMPLE_USER);
+
 		
 		
 	}
@@ -74,9 +75,59 @@ public class BookControllerTest {
 		assertEquals(expectedStatus, actualStatus);
 	}
 	
+	@Test
+	public void saveBook_shouldReturnUnauthorized_whenUserIsNotAdmin() throws Exception {
+		Book book = new Book();
+		book.setBook_id(20);
+		book.setAuthor("JK Rowling");
+		book.setTitle("Prisoner of Azkaban");
+		book.setPublisher("Bloomsbury");
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.SAVE_BOOK_URL)
+				.content(Converter.convertToString(book))
+				.header("Authorization", "Bearer " + jwtSimpleUser)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.FORBIDDEN.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+	}
+	
+	@Test
+	public void saveBook_shouldReturnUnauthorized_whenNoTokenProvided() throws Exception {
+		Book book = new Book();
+		book.setBook_id(20);
+		book.setAuthor("JK Rowling");
+		book.setTitle("Prisoner of Azkaban");
+		book.setPublisher("Bloomsbury");
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.SAVE_BOOK_URL)
+				.content(Converter.convertToString(book))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.UNAUTHORIZED.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+	}
+	
 	private String getTokenFromResponseAsString(String responseAsString) {
 		return responseAsString.substring(10, responseAsString.length()-2);
 		
+	}
+	
+	private String mockLogin(UserRequest user) throws Exception {
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.LOGIN_URL)
+				.content(Converter.convertToString(user))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		return getTokenFromResponseAsString(bodyString);
 	}
 
 }

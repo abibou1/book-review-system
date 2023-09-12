@@ -65,7 +65,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Transactional
 	public int deleteUser(String username) {
-		 return userRepository.deleteByUsername(username);
+		
+//		UserDetails user = loadUserByUsername(username);
+//		user.getAuthorities().remove(user);
+//		
+//		userRepository.
+		return userRepository.deleteByUsername(username);
 	}
 	
 }
