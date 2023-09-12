@@ -38,8 +38,8 @@ public class BookControllerTest {
 	public void setUp() throws Exception {
 		bookService.deleteBookByID(20);
 		
-		jwtAdmin = mockLogin(Constants.ADMIN_USER);
-		jwtSimpleUser = mockLogin(Constants.SIMPLE_USER);
+		jwtAdmin = getJWTafterMockLogin(Constants.ADMIN_USER);
+		jwtSimpleUser = getJWTafterMockLogin(Constants.SIMPLE_USER);
 		
 	}
 	
@@ -108,7 +108,7 @@ public class BookControllerTest {
 		return responseAsString.substring(10, responseAsString.length()-2);
 	}
 	
-	private String mockLogin(UserRequest user) throws Exception {
+	private String getJWTafterMockLogin(UserRequest user) throws Exception {
 		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.LOGIN_URL)
 				.content(Converter.convertToString(user))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))

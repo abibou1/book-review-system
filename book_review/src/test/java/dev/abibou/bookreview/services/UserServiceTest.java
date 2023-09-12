@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import dev.abibou.bookreview.configs.Constants;
 import dev.abibou.bookreview.payload.request.UserRequest;
 
 @SpringBootTest
@@ -22,8 +23,6 @@ public class UserServiceTest {
 	@Autowired
 	private UserDetailsServiceImpl userService;
 	
-	private final UserRequest userADMIN = new UserRequest("ambodji", "1234567", "ADMIN");
-	private final UserRequest simpleUser = new UserRequest("simpleuser", "1234567", "USER");
 	
 	
 	@BeforeAll
@@ -35,8 +34,8 @@ public class UserServiceTest {
 		
 		try {
 			userService.saveUser(userToDelete);
-			userService.saveUser(simpleUser);
-			userService.saveUser(userADMIN);
+			userService.saveUser(Constants.SIMPLE_USER);
+			userService.saveUser(Constants.ADMIN_USER);
 		} catch(DataIntegrityViolationException ex) {
 			System.err.println("Users were already in the DB.");
 		}
@@ -56,10 +55,9 @@ public class UserServiceTest {
 	@Test 
 	void saveUser_shouldThrowException_whenUsernameExists() {
 		
-		UserRequest userInfo = new UserRequest("ambodji", "1234567", "ADMIN");
 		
 		Exception exception = assertThrows(DataIntegrityViolationException.class, () -> {
-			userService.saveUser(userInfo);
+			userService.saveUser(Constants.ADMIN_USER);
 		});
 		
 		String expectedMessage = "Username already exists. Please, log in.";
