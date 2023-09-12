@@ -1,15 +1,12 @@
 package dev.abibou.bookreview.services;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,12 +38,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		Role roles = roleRepo.findByName(roleName)
 				.orElse(new Role(roleName));
 		userEntity.setRoles(Collections.singletonList(roles));
-//		Role role = new Role(userInfo.getRole());
-//		userEntity.getRoles().add(role);
 
 		try {
 			userRepository.save(userEntity);
-			// roleRepo.save();
 		} catch (DataIntegrityViolationException ex) {
 			throw new DataIntegrityViolationException("Username already exists. Please, log in.");
 		}
@@ -66,10 +60,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Transactional
 	public int deleteUser(String username) {
 		
-//		UserDetails user = loadUserByUsername(username);
-//		user.getAuthorities().remove(user);
-//		
-//		userRepository.
 		return userRepository.deleteByUsername(username);
 	}
 	

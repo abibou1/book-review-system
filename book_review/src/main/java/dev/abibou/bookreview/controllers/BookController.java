@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.abibou.bookreview.entity.Book;
@@ -24,7 +23,6 @@ public class BookController {
 	public String sayHello() {
 		return "Hello there!!!";
 	}
-	
 
 	@PostMapping("/admin/book/save")
 	public ResponseEntity<String> saveBook(@Valid @RequestBody Book book) {

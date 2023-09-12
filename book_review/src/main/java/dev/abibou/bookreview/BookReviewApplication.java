@@ -6,8 +6,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import dev.abibou.bookreview.configs.Constants;
-import dev.abibou.bookreview.payload.request.UserRequest;
-import dev.abibou.bookreview.services.UserDetailsImpl;
 import dev.abibou.bookreview.services.UserDetailsServiceImpl;
 
 @SpringBootApplication

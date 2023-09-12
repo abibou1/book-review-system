@@ -1,12 +1,10 @@
 package dev.abibou.bookreview.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,12 +26,4 @@ public class Role {
 	public Role(String name) {
 		this.name=name;
 	}
-	
-//	@Getter
-//	private final Set<Permissions> permissions;
-//	
-//	public List<SimpleGrantedAuthority> getAuthorities(){
-//		var authorities = getPermissions().
-//	}
-
 }

@@ -1,27 +1,20 @@
 package dev.abibou.bookreview.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import dev.abibou.bookreview.entity.UserEntity;
 import dev.abibou.bookreview.payload.request.UserRequest;
-import dev.abibou.bookreview.services.UserDetailsServiceImpl;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // avoid JUnitException
@@ -116,15 +109,13 @@ public class UserServiceTest {
 		String username = "NonExistentUser";
 		
 		Exception exception = assertThrows(UsernameNotFoundException.class, () -> {
-			UserDetails user = userService.loadUserByUsername(username);
+			userService.loadUserByUsername(username);
 		});
 		
-		//String expectedMessage = "Username: NonExistendUser is not found.";
 		String actualMessage = exception.getMessage();
 		
 		assertTrue(actualMessage.contains("is not found."));
 		
-		//assertEquals(expectedMessage, actualMessage);
 	}
 	
 	@Test

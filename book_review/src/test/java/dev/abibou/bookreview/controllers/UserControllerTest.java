@@ -2,9 +2,6 @@ package dev.abibou.bookreview.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,11 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import dev.abibou.bookreview.configs.Constants;
 import dev.abibou.bookreview.helpers.Converter;
 import dev.abibou.bookreview.payload.request.UserRequest;
-import dev.abibou.bookreview.payload.response.JwtResponse;
 import dev.abibou.bookreview.services.UserDetailsServiceImpl;
 
 @SpringBootTest
@@ -37,12 +32,6 @@ public class UserControllerTest {
 	@Autowired
 	private UserDetailsServiceImpl userService;
 	
-	private String signupURL = "/api/auth/signup";
-	private String loginURL="/api/auth/login";
-	
-	private final UserRequest userADMIN = new UserRequest("ambodji", "1234567", "ADMIN");
-	private final UserRequest simpleUser = new UserRequest("simpleuser", "1234567", "USER");
-	
 	@BeforeAll
 	public void delete_jonhD_username() {
 		String username = "johnD";
@@ -50,8 +39,8 @@ public class UserControllerTest {
 		userService.deleteUser(username);
 		
 		try {
-			userService.saveUser(userADMIN);
-			userService.saveUser(simpleUser);
+			userService.saveUser(Constants.ADMIN_USER);
+			userService.saveUser(Constants.SIMPLE_USER);
 		} catch(DataIntegrityViolationException ex) {
 			System.err.println("Initial users are already in the DB.");
 		}
@@ -62,7 +51,7 @@ public class UserControllerTest {
 		
 		UserRequest user = new UserRequest("johnD", "1234567", "ADMIN");
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(signupURL)
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.SIGNUP_URL)
 				.content(Converter.convertToString(user))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
@@ -75,9 +64,9 @@ public class UserControllerTest {
 	
 	@Test
 	public void signup_shouldReturBadRequest_whenDataIsInvalid() throws Exception {
-UserRequest user = new UserRequest("amb", "1234567", "ADMIN");
+		UserRequest user = new UserRequest("amb", "1234567", "ADMIN");
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(signupURL)
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.SIGNUP_URL)
 				.content(Converter.convertToString(user))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
@@ -95,8 +84,8 @@ UserRequest user = new UserRequest("amb", "1234567", "ADMIN");
 	public void signup_shouldReturnConflictError_whenUserExists() throws Exception {
 		
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(signupURL)
-				.content(Converter.convertToString(userADMIN))
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.SIGNUP_URL)
+				.content(Converter.convertToString(Constants.ADMIN_USER))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
 		
@@ -113,7 +102,7 @@ UserRequest user = new UserRequest("amb", "1234567", "ADMIN");
 	public void login_shouldReturnToken_whenUserIsRegistered() throws Exception {
 		UserRequest user = new UserRequest("ambodji", "1234567");
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(loginURL)
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.LOGIN_URL)
 				.content(Converter.convertToString(user))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
@@ -131,7 +120,7 @@ UserRequest user = new UserRequest("amb", "1234567", "ADMIN");
 	public void login_shouldBadCredentials_whenUsernameOrPasswordIncorrect() throws Exception {
 		UserRequest user = new UserRequest("ambodji", "forgotPassword23");
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(loginURL)
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.LOGIN_URL)
 				.content(Converter.convertToString(user))
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
@@ -144,14 +133,5 @@ UserRequest user = new UserRequest("amb", "1234567", "ADMIN");
 		assertTrue(response.contains("errors") && response.contains("Bad credentials"));
 		
 	}
-	
-	
-//	public static String asJsonString(final Object obj) {
-//	    try {
-//	        return new ObjectMapper().writeValueAsString(obj);
-//	    } catch (Exception e) {
-//	        throw new RuntimeException(e);
-//	    }
-//	}
 
 }

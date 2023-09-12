@@ -2,8 +2,6 @@ package dev.abibou.bookreview.utils;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -48,16 +46,12 @@ public class JwtUtil {
 	      return true;
 	    } catch (MalformedJwtException e) {
 	    	throw new MalformedJwtException("Invalid JWT token: " + e.getMessage());
-	      //System.err.println("Invalid JWT token: " + e.getMessage());
 	    } catch (ExpiredJwtException e) {
 	    	throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "JWT token is expired: " + e.getMessage());
-	      //System.err.println("JWT token is expired: " + e.getMessage());
 	    } catch (UnsupportedJwtException e) {
 	    	throw new UnsupportedJwtException("JWT token is unsupported: " + e.getMessage());
-	     // System.err.println("JWT token is unsupported: " + e.getMessage());
 	    } catch (IllegalArgumentException e) {
 	    	throw new IllegalArgumentException("JWT claims string is empty: " + e.getMessage());
-	     // System.err.println("JWT claims string is empty: " + e.getMessage());
 	    } catch (Exception e) {
 	    	throw new Exception("Failed to validate token: " + e.getMessage());
 	    }

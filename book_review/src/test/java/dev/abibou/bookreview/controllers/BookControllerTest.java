@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import dev.abibou.bookreview.entity.Book;
 import dev.abibou.bookreview.helpers.Converter;
 import dev.abibou.bookreview.payload.request.UserRequest;
-import dev.abibou.bookreview.payload.response.JwtResponse;
 import dev.abibou.bookreview.services.BookService;
 import dev.abibou.bookreview.configs.Constants;
 
@@ -39,18 +38,8 @@ public class BookControllerTest {
 	public void setUp() throws Exception {
 		bookService.deleteBookByID(20);
 		
-//		MvcResult mvcResultAdmin = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.LOGIN_URL)
-//				.content(Converter.convertToString(Constants.ADMIN_USER))
-//				.contentType(MediaType.APPLICATION_JSON_VALUE))
-//				.andReturn();
-//		
-//		String bodyStringAdmin = mvcResultAdmin.getResponse().getContentAsString();
-//		jwtAdmin = getTokenFromResponseAsString(bodyString);
-		
 		jwtAdmin = mockLogin(Constants.ADMIN_USER);
 		jwtSimpleUser = mockLogin(Constants.SIMPLE_USER);
-
-		
 		
 	}
 	
@@ -115,8 +104,8 @@ public class BookControllerTest {
 	}
 	
 	private String getTokenFromResponseAsString(String responseAsString) {
-		return responseAsString.substring(10, responseAsString.length()-2);
 		
+		return responseAsString.substring(10, responseAsString.length()-2);
 	}
 	
 	private String mockLogin(UserRequest user) throws Exception {
