@@ -55,7 +55,7 @@ public class UserServiceTest {
 		UserRequest userInfo = new UserRequest();
 		userInfo.setUsername("johnD");
 		userInfo.setPassword("1234567");
-		userInfo.setRole("admin");
+		userInfo.setRoleName("ADMIN");
 
 		assertTrue(userService.saveUser(userInfo));
 	}

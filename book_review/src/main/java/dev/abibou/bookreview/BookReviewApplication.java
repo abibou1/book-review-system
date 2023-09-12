@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import dev.abibou.bookreview.configs.Constants;
 import dev.abibou.bookreview.payload.request.UserRequest;
 import dev.abibou.bookreview.services.UserDetailsImpl;
 import dev.abibou.bookreview.services.UserDetailsServiceImpl;
@@ -20,12 +21,10 @@ public class BookReviewApplication {
 
 		UserDetailsServiceImpl userService = context.getBean("userDetailsServiceImpl", UserDetailsServiceImpl.class);
 
-		UserRequest userAdmin = new UserRequest("ambodji", "1234567", "ADMIN");
-		UserRequest simpleUser = new UserRequest("simpleuser", "1234567", "USER");
 		
 		try {
-			userService.saveUser(userAdmin);
-			userService.saveUser(simpleUser);
+			userService.saveUser(Constants.ADMIN_USER);
+			userService.saveUser(Constants.SIMPLE_USER);
 		} catch(DataIntegrityViolationException ex) {
 			System.err.println("Initial users are already in the DB.");
 		}

@@ -9,5 +9,5 @@ import dev.abibou.bookreview.entity.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-	Optional<Role> findByName(Role role);
+	Optional<Role> findByName(String name);
 }

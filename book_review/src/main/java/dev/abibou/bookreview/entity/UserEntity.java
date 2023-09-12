@@ -1,6 +1,8 @@
 package dev.abibou.bookreview.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -41,11 +43,11 @@ public class UserEntity {
 	@Column
 	private String password;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable( name = "user_roles",
 		joinColumns = @JoinColumn(name = "user_id"),
 		inverseJoinColumns = @JoinColumn( name = "role_id"))
-	private Set<Role> roles = new HashSet<>();
+	private List<Role> roles = new ArrayList<>();
 	
 	public UserEntity(String username, String password) {
 		this.username=username;

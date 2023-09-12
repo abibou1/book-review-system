@@ -34,6 +34,7 @@ import dev.abibou.bookreview.payload.response.JwtResponse;
 import dev.abibou.bookreview.repository.RoleRepository;
 import dev.abibou.bookreview.repository.UserRepository;
 import dev.abibou.bookreview.services.UserDetailsImpl;
+import dev.abibou.bookreview.services.UserDetailsServiceImpl;
 import dev.abibou.bookreview.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -50,6 +51,8 @@ public class UserController {
 	UserRepository userRepo;
 	@Autowired
 	RoleRepository roleRepo;
+	@Autowired
+	UserDetailsServiceImpl userService;
 	
 	 @Autowired
 	 PasswordEncoder encoder;
@@ -60,34 +63,46 @@ public class UserController {
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody UserRequest userInfo){
 		
-		String username = userInfo.getUsername();
-		String password = userInfo.getPassword();
-//
-//		if(userRepo.existsByUsername(username)) {
-//			
-//			return new ResponseEntity<>("Error: Username is already taken!", HttpStatus.BAD_REQUEST);
-//		}
-		
-		UserEntity userEntity = new UserEntity(username, encoder.encode(password));
-		
-		Role role;
-		
-		if(userInfo.getRole().toUpperCase() == "ADMIN" ) {
-			role = new Role("ADMIN");
+		String roleName;
+		String roleInput = userInfo.getRoleName().toUpperCase();
+		if(roleInput.equals("ADMIN")) {
+			roleName = "ADMIN";
 		}
 		else {
-			role = new Role("USER");
+			roleName = "USER";
 		}
 		
+		userInfo.setRoleName(roleName);
 		
-		Set<Role> roles = new HashSet<>();
-		roles.add(role);
+		userService.saveUser(userInfo);
 		
-		userEntity.setRoles(roles);
-		roleRepo.save(role);
-		userRepo.save(userEntity);
+		return new ResponseEntity<UserRequest>(userInfo, HttpStatus.CREATED);
 		
-		return new ResponseEntity<UserEntity>(userEntity, HttpStatus.CREATED);
+		
+		
+//		String username = userInfo.getUsername();
+//		String password = userInfo.getPassword();
+//		
+//		UserEntity userEntity = new UserEntity(username, encoder.encode(password));
+//		
+//		Role role;
+//		
+//		if(userInfo.getRole().toUpperCase() == "ADMIN" ) {
+//			role = new Role("ADMIN");
+//		}
+//		else {
+//			role = new Role("USER");
+//		}
+//		
+//		
+//		Set<Role> roles = new HashSet<>();
+//		roles.add(role);
+//		
+//		userEntity.setRoles(roles);
+//		roleRepo.save(role);
+//		userRepo.save(userEntity);
+//		
+//		return new ResponseEntity<UserEntity>(userEntity, HttpStatus.CREATED);
 		
 		//return new ResponseEntity<>("User registered successfully!", HttpStatus.OK);
 	}
