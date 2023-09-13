@@ -42,7 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		try {
 			userRepository.save(userEntity);
 		} catch (DataIntegrityViolationException ex) {
-			throw new DataIntegrityViolationException("Username already exists. Please, log in.");
+			return false;
 		}
 		
 		return true;

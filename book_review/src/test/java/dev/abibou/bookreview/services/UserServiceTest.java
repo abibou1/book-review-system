@@ -1,6 +1,7 @@
 package dev.abibou.bookreview.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -32,17 +32,14 @@ public class UserServiceTest {
 		
 		userService.deleteUser(username);
 		
-		try {
-			userService.saveUser(userToDelete);
-			userService.saveUser(Constants.SIMPLE_USER);
-			userService.saveUser(Constants.ADMIN_USER);
-		} catch(DataIntegrityViolationException ex) {
-			System.err.println("Users were already in the DB.");
-		}
+		
+		userService.saveUser(userToDelete);
+		userService.saveUser(Constants.SIMPLE_USER);
+		userService.saveUser(Constants.ADMIN_USER);
 	}
 
 	@Test
-	public void saveUser_shouldSaveUser_whenNewUserIsValid() throws Exception {
+	public void saveUser_shouldTrue_whenNewUserIsValid() throws Exception {
 
 		UserRequest userInfo = new UserRequest();
 		userInfo.setUsername("johnD");
@@ -53,17 +50,10 @@ public class UserServiceTest {
 	}
 	
 	@Test 
-	void saveUser_shouldThrowException_whenUsernameExists() {
+	void saveUser_shouldReturnFalse_whenUsernameExists() {
 		
 		
-		Exception exception = assertThrows(DataIntegrityViolationException.class, () -> {
-			userService.saveUser(Constants.ADMIN_USER);
-		});
-		
-		String expectedMessage = "Username already exists. Please, log in.";
-		String actualMessage = exception.getMessage();
-		
-		assertEquals(actualMessage, expectedMessage);
+		assertFalse(userService.saveUser(Constants.ADMIN_USER));
 	}
 	
 	@Test

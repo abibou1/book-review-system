@@ -37,13 +37,9 @@ public class UserControllerTest {
 		String username = "johnD";
 		
 		userService.deleteUser(username);
-		
-		try {
-			userService.saveUser(Constants.ADMIN_USER);
-			userService.saveUser(Constants.SIMPLE_USER);
-		} catch(DataIntegrityViolationException ex) {
-			System.err.println("Initial users are already in the DB.");
-		}
+
+		userService.saveUser(Constants.ADMIN_USER);
+		userService.saveUser(Constants.SIMPLE_USER);
 	}
 	
 	@Test
@@ -94,7 +90,7 @@ public class UserControllerTest {
 		String response = mvcResult.getResponse().getContentAsString();
 		
 		assertEquals(status, HttpStatus.CONFLICT.value());
-		assertTrue(response.contains("errors") && response.contains("DataIntegrityViolationException"));
+		assertTrue(response.contains("already exists. Please, log in."));
 		
 	}
 	

@@ -60,9 +60,17 @@ public class UserController {
 		
 		userInfo.setRoleName(roleName);
 		
-		userService.saveUser(userInfo);
+		boolean isSaved = userService.saveUser(userInfo);
 		
-		return new ResponseEntity<UserRequest>(userInfo, HttpStatus.CREATED);
+		if(!isSaved) {
+			
+			String message = "User with username=" + "already exists. Please, log in.";
+			return new ResponseEntity<String>(message, HttpStatus.CONFLICT);
+		}
+		else {
+			return new ResponseEntity<UserRequest>(userInfo, HttpStatus.CREATED);
+		}
+		
 
 	}
 
