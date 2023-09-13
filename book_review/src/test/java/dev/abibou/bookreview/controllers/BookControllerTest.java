@@ -1,6 +1,7 @@
 package dev.abibou.bookreview.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -38,8 +39,8 @@ public class BookControllerTest {
 	public void setUp() throws Exception {
 		bookService.deleteBookByID(20);
 		
-		jwtAdmin = getJWTafterMockLogin(Constants.ADMIN_USER);
-		jwtSimpleUser = getJWTafterMockLogin(Constants.SIMPLE_USER);
+		jwtAdmin = getJWTafterMock(Constants.ADMIN_USER, Constants.LOGIN_URL);
+		jwtSimpleUser = getJWTafterMock(Constants.SIMPLE_USER, Constants.LOGIN_URL);
 		
 	}
 	
@@ -51,12 +52,9 @@ public class BookControllerTest {
 		book.setAuthor("JK Rowling");
 		book.setTitle("Prisoner of Azkaban");
 		book.setPublisher("Bloomsbury");
+			
+		MvcResult mvcResult = GetMVCResultFromMockMvcPerform(book, Constants.SAVE_BOOK_URL, jwtAdmin);
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.SAVE_BOOK_URL)
-				.content(Converter.convertToString(book))
-				.header("Authorization", "Bearer " + jwtAdmin)
-				.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
 		
 		int actualStatus = mvcResult.getResponse().getStatus();
 		int expectedStatus = HttpStatus.CREATED.value();
@@ -71,12 +69,8 @@ public class BookControllerTest {
 		book.setAuthor("JK Rowling");
 		book.setTitle("Prisoner of Azkaban");
 		book.setPublisher("Bloomsbury");
-		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.SAVE_BOOK_URL)
-				.content(Converter.convertToString(book))
-				.header("Authorization", "Bearer " + jwtSimpleUser)
-				.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
+
+		MvcResult mvcResult = GetMVCResultFromMockMvcPerform(book, Constants.SAVE_BOOK_URL, jwtSimpleUser);
 		
 		int actualStatus = mvcResult.getResponse().getStatus();
 		int expectedStatus = HttpStatus.FORBIDDEN.value();
@@ -103,20 +97,93 @@ public class BookControllerTest {
 		assertEquals(expectedStatus, actualStatus);
 	}
 	
-	private String getTokenFromResponseAsString(String responseAsString) {
+	@Test
+	public void getAllBooks_ShouldReturnAllBooks_WhenJWTisAdmin() throws Exception {
 		
-		return responseAsString.substring(10, responseAsString.length()-2);
-	}
-	
-	private String getJWTafterMockLogin(UserRequest user) throws Exception {
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(Constants.LOGIN_URL)
-				.content(Converter.convertToString(user))
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS)
+				.header("Authorization", "Bearer " + jwtAdmin)
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
 		
 		String bodyString = mvcResult.getResponse().getContentAsString();
 		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.OK.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(bodyString.contains("book_id")
+				&& bodyString.contains("author")
+				&& bodyString.contains("title")
+				&& bodyString.contains("publisher"));
+		
+		
+	}
+	
+	@Test
+	public void getAllBooks_ShouldReturnAllBooks_WhenJWTisSimpleUser() throws Exception {
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS)
+				.header("Authorization", "Bearer " + jwtSimpleUser)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.OK.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(bodyString.contains("book_id")
+				&& bodyString.contains("author")
+				&& bodyString.contains("title")
+				&& bodyString.contains("publisher"));
+	}
+	
+	@Test
+	public void getAllBooks_ShouldReturnUnauthorized_WhenNoJwtProvided() throws Exception {
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.UNAUTHORIZED.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(bodyString.contains("error"));
+	}
+	
+	private String getTokenFromResponseAsString(String responseAsString) {
+		
+		return responseAsString.substring(10, responseAsString.length()-2);
+	}
+	
+	private String getJWTafterMock(UserRequest user, String url) throws Exception {
+		
+		MvcResult mvcResult = GetMVCResultFromMockMvcPerform(user, url);
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
 		return getTokenFromResponseAsString(bodyString);
+	}
+	
+	private MvcResult GetMVCResultFromMockMvcPerform(UserRequest user, String url) throws Exception {
+		
+		return this.mockMvc.perform(MockMvcRequestBuilders.post(url)
+				.content(Converter.convertToString(user))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+	}
+	
+private MvcResult GetMVCResultFromMockMvcPerform(Book book, String url, String jwtToken) throws Exception {
+		
+		return this.mockMvc.perform(MockMvcRequestBuilders.post(url)
+				.content(Converter.convertToString(book))
+				.header("Authorization", "Bearer " + jwtToken)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
 	}
 
 }

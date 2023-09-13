@@ -18,11 +18,6 @@ import jakarta.validation.Valid;
 public class BookController {
 	@Autowired
 	BookService bookService;
-	
-	@PostMapping("/admin/book/hello")
-	public String sayHello() {
-		return "Hello there!!!";
-	}
 
 	@PostMapping("/admin/book/save")
 	public ResponseEntity<String> saveBook(@Valid @RequestBody Book book) {
