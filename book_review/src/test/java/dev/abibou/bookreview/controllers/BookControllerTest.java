@@ -100,7 +100,7 @@ public class BookControllerTest {
 	@Test
 	public void getAllBooks_ShouldReturnAllBooks_WhenJWTisAdmin() throws Exception {
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS)
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS_URL)
 				.header("Authorization", "Bearer " + jwtAdmin)
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
@@ -122,7 +122,7 @@ public class BookControllerTest {
 	@Test
 	public void getAllBooks_ShouldReturnAllBooks_WhenJWTisSimpleUser() throws Exception {
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS)
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS_URL)
 				.header("Authorization", "Bearer " + jwtSimpleUser)
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
@@ -142,7 +142,7 @@ public class BookControllerTest {
 	@Test
 	public void getAllBooks_ShouldReturnUnauthorized_WhenNoJwtProvided() throws Exception {
 		
-		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS)
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(Constants.GET_ALL_BOOKS_URL)
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
 		
