@@ -8,29 +8,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.abibou.bookreview.entity.Book;
 import dev.abibou.bookreview.services.BookService;
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/book")
 public class BookController {
 	@Autowired
 	BookService bookService;
 
-	@PostMapping("admin/book/save")
-	public ResponseEntity<String> saveBook(@RequestBody Book book) {
+	@PostMapping("/admin/book/save")
+	public ResponseEntity<String> saveBook(@Valid @RequestBody Book book) {
 
 		bookService.saveBook(book);
 
-		String response = "book with id="+book.getId()+ " is saved.";
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		String response = "book with id="+book.getBook_id()+ " is saved.";
+		return new ResponseEntity<String>(response, HttpStatus.CREATED);
 
 	}
 
-	@GetMapping("authenticated/book/all-books")
+	@GetMapping("/authenticated/book/all-books")
 	public ResponseEntity<List<Book>> getAllBooks(){
 		List<Book> books = bookService.getAllBooks();
 

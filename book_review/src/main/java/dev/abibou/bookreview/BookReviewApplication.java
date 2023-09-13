@@ -3,24 +3,30 @@ package dev.abibou.bookreview;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.dao.DataIntegrityViolationException;
 
-import dev.abibou.bookreview.models.UserInfo;
-import dev.abibou.bookreview.services.UserService;
+import dev.abibou.bookreview.configs.Constants;
+import dev.abibou.bookreview.services.UserDetailsServiceImpl;
 
 @SpringBootApplication
 public class BookReviewApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BookReviewApplication.class, args);
+		
+		//SpringApplication.run(BookReviewApplication.class, args);
 
-//		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
-//
-//		UserService userService = context.getBean("userService", UserService.class);
-//
-//		UserInfo userInfo = new UserInfo();
-//		userInfo.setUsername("harry");
-//		userInfo.setPassword("12345");
-//		
+		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
+
+		UserDetailsServiceImpl userService = context.getBean("userDetailsServiceImpl", UserDetailsServiceImpl.class);
+
+		
+		try {
+			userService.saveUser(Constants.ADMIN_USER);
+			userService.saveUser(Constants.SIMPLE_USER);
+		} catch(DataIntegrityViolationException ex) {
+			System.err.println("Initial users are already in the DB.");
+		}
+		
 //		System.out.println(userService.saveUser(userInfo));
 		
 //		String username = "john";

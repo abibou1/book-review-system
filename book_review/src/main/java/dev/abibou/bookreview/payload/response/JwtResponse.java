@@ -1,4 +1,4 @@
-package dev.abibou.bookreview.models;
+package dev.abibou.bookreview.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInfo {
-	private String username;
-	private String password;
+public class JwtResponse {
+	
+	private String token;
+
 }
