@@ -11,5 +11,10 @@ public class Converter {
 	        throw new RuntimeException(e);
 	    }
 	}
+	
+	public static String getJWtTokenFromHeader(String header) {
+		
+		return header.substring(7);
+	}
 
 }
