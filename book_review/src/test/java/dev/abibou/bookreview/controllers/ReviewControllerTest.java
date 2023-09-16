@@ -56,16 +56,16 @@ public class ReviewControllerTest {
 	public void writeReview_ShouldWriteReview_WhenUserIsAdmin() throws Exception {
 		String username = jwtUtil.getUserNameFromJwtToken(jwtAdmin);
 		int book_id = 100;
-		String comment = "This is an amazing book";
+		ReviewRequest reviewRequest = new ReviewRequest("This is an amazing book");
 		
 		Review review = new Review();
 		review.setUsername(username);
 		review.setBookId(book_id);
-		review.setComment(comment);
+		review.setComment(reviewRequest.getComment());
 		
 		
 		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(urlWriteReview+book_id)
-				.content(Converter.convertToString(new ReviewRequest(comment)))
+				.content(Converter.convertToString(reviewRequest))
 				.header("Authorization", "Bearer " + jwtAdmin)
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
@@ -75,29 +75,103 @@ public class ReviewControllerTest {
 		int actualStatus = mvcResult.getResponse().getStatus();
 		int expectedStatus = HttpStatus.CREATED.value();
 		
-		System.err.println("Body" + bodyString);
-		
 		assertEquals(expectedStatus, actualStatus);
-		assertTrue(bodyString.contains("review_id")
-				&& bodyString.contains("username")
-				&& bodyString.contains("bookId")
-				&& bodyString.contains("comment"));
-		
-		
+		assertTrue(isReviewObjectReturned(bodyString));
 		
 	}
 	
-//	@Test
-//	public void writeReview_ShouldWriteReview_WhenUserIsSimpleUser() {
-//		
-//		
-//	}
-//	
-//	@Test
-//	public void writeReview_ShouldReturnUnauthorized_WhenUserIsAdmin() {
-//		
-//		
-//	}
+	@Test
+	public void writeReview_ShouldWriteReview_WhenUserIsSimpleUser() throws Exception {
+		String username = jwtUtil.getUserNameFromJwtToken(jwtAdmin);
+		int book_id = 100;
+		ReviewRequest reviewRequest = new ReviewRequest("This is an amazing book");
+		
+		Review review = new Review();
+		review.setUsername(username);
+		review.setBookId(book_id);
+		review.setComment(reviewRequest.getComment());
+		
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(urlWriteReview+book_id)
+				.content(Converter.convertToString(reviewRequest))
+				.header("Authorization", "Bearer " + jwtSimpleUser)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.CREATED.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(isReviewObjectReturned(bodyString));
+		
+	}
+	
+	@Test
+	public void writeReview_ShouldReturnUnauthorized_WhenNoJwtProvided() throws Exception {
+		String username = jwtUtil.getUserNameFromJwtToken(jwtAdmin);
+		int book_id = 100;
+		ReviewRequest reviewRequest = new ReviewRequest("This is an amazing book");
+		
+		Review review = new Review();
+		review.setUsername(username);
+		review.setBookId(book_id);
+		review.setComment(reviewRequest.getComment());
+		
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(urlWriteReview+book_id)
+				.content(Converter.convertToString(reviewRequest))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.UNAUTHORIZED.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(bodyString.contains("error")
+				&& bodyString.contains("Full authentication is required to access this resource"));
+		
+	}
+	
+	@Test
+	public void writeReview_ShouldReturnBadRequest_WhenReviewRequestIsNull() throws Exception {
+		String username = jwtUtil.getUserNameFromJwtToken(jwtAdmin);
+		int book_id = 100;
+		ReviewRequest reviewRequest = new ReviewRequest();
+		
+		Review review = new Review();
+		review.setUsername(username);
+		review.setBookId(book_id);
+		review.setComment(reviewRequest.getComment());
+		
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(urlWriteReview+book_id)
+				.content(Converter.convertToString(reviewRequest))
+				.header("Authorization", "Bearer " + jwtSimpleUser)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.BAD_REQUEST.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(bodyString.contains("errors")
+				&& bodyString.contains("comment is mandantory"));
+		
+	}
+	
+	private boolean isReviewObjectReturned(String responseBodyString) {
+		return responseBodyString.contains("review_id")
+			&& responseBodyString.contains("username")
+			&& responseBodyString.contains("bookId")
+			&& responseBodyString.contains("comment");
+	}
+
 	private String getJWTafterMock(UserRequest user, String url) throws Exception {
 		
 		MvcResult mvcResult = GetMVCResultFromMockMvcPerform(user, url);
