@@ -22,7 +22,7 @@ public class UserRequest {
 	@Min(value=7, message="Invalid Password: password must be at least 7 characters")
 	private String password;
 	
-	@NotBlank(message = "Role is mandatory")
+	@NotBlank(message = "RoleName is mandatory")
 	@NotNull(message = "Invalid role name: role is NULL")
 	private String roleName;
 	
