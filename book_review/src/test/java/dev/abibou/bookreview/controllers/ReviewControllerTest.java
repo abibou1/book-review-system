@@ -32,7 +32,7 @@ public class ReviewControllerTest {
 	private String jwtSimpleUser;
 	
 	private String urlWriteReview = "/authenticated/review/write/";
-	private String urlGetReviewByBookId = "/authenticated/review/get-reviews-of/{book_id}";
+	private String urlGetReviewByBookId = "/authenticated/review/get-reviews-of/";
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -163,6 +163,64 @@ public class ReviewControllerTest {
 		assertTrue(bodyString.contains("errors")
 				&& bodyString.contains("comment is mandantory"));
 		
+	}
+	
+	@Test
+	public void getReviewOf_ReturnReviewsOfBookId_whenUserIsAdmin() throws Exception {
+		
+		int book_id = 3;
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(urlGetReviewByBookId+book_id)
+				.header("Authorization", "Bearer " + jwtAdmin)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.OK.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(isReviewObjectReturned(bodyString));
+		
+	}
+	
+	@Test
+	public void getReviewOf_ReturnReviewsOfBookId_whenUserIsSimpleUser() throws Exception {
+		
+		int book_id = 4;
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(urlGetReviewByBookId+book_id)
+				.header("Authorization", "Bearer " + jwtSimpleUser)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.OK.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(isReviewObjectReturned(bodyString));
+	}
+	
+	@Test
+	public void getReviewOf_ReturnUnauthorized_whenNoJwtProvided() throws Exception {
+		
+		int book_id = 4;
+		
+		MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(urlGetReviewByBookId+book_id)
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+		
+		String bodyString = mvcResult.getResponse().getContentAsString();
+		
+		int actualStatus = mvcResult.getResponse().getStatus();
+		int expectedStatus = HttpStatus.UNAUTHORIZED.value();
+		
+		assertEquals(expectedStatus, actualStatus);
+		assertTrue(bodyString.contains("error")
+				&& bodyString.contains("Full authentication is required to access this resource"));
 	}
 	
 	private boolean isReviewObjectReturned(String responseBodyString) {
