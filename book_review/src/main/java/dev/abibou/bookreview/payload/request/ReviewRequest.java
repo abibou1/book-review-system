@@ -12,5 +12,4 @@ public class ReviewRequest {
 	
 	@NotBlank(message = "comment is mandantory")
 	private String comment;
-
 }

@@ -1,7 +1,6 @@
 package dev.abibou.bookreview.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -45,7 +44,6 @@ public class BookControllerTest {
 		
 	}
 	
-	
 	@Test
 	public void saveBook_shouldSaveBook_whenBookInfoIsValid() throws Exception {
 		Book book = new Book();
@@ -55,7 +53,6 @@ public class BookControllerTest {
 		book.setPublisher("Bloomsbury");
 			
 		MvcResult mvcResult = GetMVCResultFromMockMvcPerform(book, Constants.SAVE_BOOK_URL, jwtAdmin);
-		
 		
 		int actualStatus = mvcResult.getResponse().getStatus();
 		int expectedStatus = HttpStatus.CREATED.value();
@@ -118,8 +115,6 @@ public class BookControllerTest {
 				&& bodyString.contains("author")
 				&& bodyString.contains("title")
 				&& bodyString.contains("publisher"));
-		
-		
 	}
 	
 	@Test
@@ -130,16 +125,10 @@ public class BookControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
 		
-		String bodyString = mvcResult.getResponse().getContentAsString();
-		
 		int actualStatus = mvcResult.getResponse().getStatus();
 		int expectedStatus = HttpStatus.OK.value();
 		
 		assertEquals(expectedStatus, actualStatus);
-//		assertTrue(bodyString.contains("book_id")
-//				&& bodyString.contains("author")
-//				&& bodyString.contains("title")
-//				&& bodyString.contains("publisher"));
 	}
 	
 	@Test

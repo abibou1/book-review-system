@@ -34,7 +34,6 @@ public class UserEntity {
 	@Column
 	private String password;
 	
-	// fetch = FetchType.EAGER, cascade = CascadeType.ALL
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable( name = "user_roles",
 		joinColumns = @JoinColumn(name = "user_id"),

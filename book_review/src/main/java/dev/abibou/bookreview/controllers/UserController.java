@@ -22,13 +22,10 @@ import dev.abibou.bookreview.repository.UserRepository;
 import dev.abibou.bookreview.services.UserDetailsImpl;
 import dev.abibou.bookreview.services.UserDetailsServiceImpl;
 import dev.abibou.bookreview.utils.JwtUtil;
-//import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-//import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
-// @OpenAPIDefinition(info = @Info(title = "USER API Definition", version = "2.0", description = "Book Review Application"))
 public class UserController {
 	
 	@Autowired
@@ -89,7 +86,7 @@ public class UserController {
 		String jwt = jwtUtil.generateJwtToken(authentication);
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		// List<String> roles = 
+
 		userDetails.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
