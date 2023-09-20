@@ -22,7 +22,7 @@ public class BookReviewApplication {
 		ConfigurableApplicationContext context = SpringApplication.run(BookReviewApplication.class, args);
 
 		UserDetailsServiceImpl userService = context.getBean("userDetailsServiceImpl", UserDetailsServiceImpl.class);
-		ReviewService reviewService = context.getBean("reviewService", ReviewService.class);
+		// ReviewService reviewService = context.getBean("reviewService", ReviewService.class);
 
 		userService.saveUser(Constants.ADMIN_USER);
 		userService.saveUser(Constants.SIMPLE_USER);
@@ -33,23 +33,23 @@ public class BookReviewApplication {
 
 	}
 	
-	private static void initializeReview(ReviewService reviewService) {
-		Random random = new Random();
-		for(int i=0; i<10;i++) {
-			
-			Review review = new Review();
-			review.setUsername(Constants.SIMPLE_USER.getUsername());
-			review.setComment("This is a great book.");
-			
-			review.setBookId(random.nextInt(6));
-			
-			reviewService.saveReview(review);
-		}
-		
-		List<Review> reviews = reviewService.getReviewsByBook_id(3);
-		for(Review review: reviews){
-			System.err.println(review);
-		}
-	}
+//	private static void initializeReview(ReviewService reviewService) {
+//		Random random = new Random();
+//		for(int i=0; i<10;i++) {
+//			
+//			Review review = new Review();
+//			review.setUsername(Constants.SIMPLE_USER.getUsername());
+//			review.setComment("This is a great book.");
+//			
+//			review.setBookId(random.nextInt(6));
+//			
+//			reviewService.saveReview(review);
+//		}
+//		
+//		List<Review> reviews = reviewService.getReviewsByBook_id(3);
+//		for(Review review: reviews){
+//			System.err.println(review);
+//		}
+//	}
 
 }

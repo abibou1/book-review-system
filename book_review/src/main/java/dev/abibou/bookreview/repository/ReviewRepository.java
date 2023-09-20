@@ -11,5 +11,4 @@ import dev.abibou.bookreview.entity.Review;
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 	
 	List<Review> findByBookId(Integer book_id);
-
 }
