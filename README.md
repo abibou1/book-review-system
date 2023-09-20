@@ -25,3 +25,6 @@ mvn spring-boot:run
 
 List of API:
 ![Alt text](swagger-ui.png)
+
+Details of `/review/write/{book_id}`
+![Alt text](write-review-details.png)
