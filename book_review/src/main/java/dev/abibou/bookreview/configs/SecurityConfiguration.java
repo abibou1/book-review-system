@@ -59,6 +59,7 @@ public class SecurityConfiguration {
 			.authorizeHttpRequests(request ->
 			request.requestMatchers("/api/auth/**").permitAll()
 				.requestMatchers("/api/test/**").permitAll()
+				.requestMatchers("/swagger/**").permitAll()
 				.requestMatchers("/admin/book/**").hasAuthority("ADMIN")
 				.anyRequest().authenticated()
 		);
