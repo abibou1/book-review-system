@@ -20,11 +20,15 @@ Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/
 mvn spring-boot:run
 ```
 
-#### Swagger documentation 
-`http://localhost:8080/swagger/swagger-ui/index.html#/`
+#### Swagger documentation
+```shell
+`http://localhost:8080/swagger/swagger-ui/index.html#/
+```
 
-List of API:
+- List of API:
 ![Alt text](swagger-ui.png)
 
-Details of `/review/write/{book_id}`
+
+
+- Details of `/review/write/{book_id}`
 ![Alt text](write-review-details.png)
